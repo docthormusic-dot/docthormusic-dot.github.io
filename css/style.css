@@ -668,6 +668,8 @@ h2 {
 /* slightly tighter vertical padding so heading + player + platforms fit 100svh */
 @media (min-width: 1024px) and (min-height: 640px) {
   #music.section { padding-block: clamp(40px, 5.5vh, 76px); }
+  /* About snaps flush to the top — give its eyebrow extra breathing room */
+  #about.section { padding-top: calc(clamp(48px, 7vh, 90px) + clamp(24px, 4vh, 40px)); }
 }
 
 .player {
