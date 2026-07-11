@@ -514,11 +514,25 @@ main { position: relative; z-index: 1; }
   padding-inline: var(--pad);
 }
 
-/* generous full-height sections on desktop — native scrolling, no snapping */
+/* ---- desktop scroll snapping: 100% native CSS, no JS ----
+   mandatory: the page never rests between sections (nearest one wins).
+   snap-stop always: one gesture = one section, flings can't skip.
+   The hero's own snap point keeps it freely reachable; scrolling down
+   from it carries fully into About (the first hard stop).
+   Sections taller than the viewport scroll freely inside their snap
+   area (per spec), so nothing gets trapped on small screens. */
 @media (min-width: 1024px) and (min-height: 640px) {
+  html { scroll-snap-type: y mandatory; }
+  .hero {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
   .section {
     min-height: 100svh;
     padding-block: clamp(48px, 7vh, 90px);
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    scroll-margin-top: 0; /* snap flush to the viewport; anchors then match snap positions */
   }
 }
 
