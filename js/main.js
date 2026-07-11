@@ -43,12 +43,22 @@
     .map(function (a) { return document.querySelector(a.getAttribute("href")); })
     .filter(Boolean);
   if ("IntersectionObserver" in window) {
+    var activeSection = "";
+    var markActive = function (id) {
+      activeSection = id;
+      menuLinks.forEach(function (a) {
+        a.setAttribute("aria-current", a.getAttribute("href") === "#" + id ? "true" : "false");
+      });
+    };
     var sectionObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        menuLinks.forEach(function (a) {
-          a.setAttribute("aria-current", a.getAttribute("href") === "#" + entry.target.id ? "true" : "false");
-        });
+        if (entry.isIntersecting) {
+          markActive(entry.target.id);
+        } else if (activeSection === entry.target.id) {
+          /* the active section left the band with no successor —
+             we're back in the hero (or between sections): clear */
+          markActive("");
+        }
       });
     }, { rootMargin: "-40% 0px -55% 0px" });
     sections.forEach(function (s) { sectionObs.observe(s); });
