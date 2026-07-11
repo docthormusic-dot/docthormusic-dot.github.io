@@ -556,16 +556,26 @@ h2 {
 }
 /* NOTE: .booking-inner is a flex column, so this h2 shrinks to fit its
    content — a % max-width here resolves against the heading itself and
-   cancels the scale-up. No % guard; small screens step the scale down. */
+   cancels the scale-up. No % guard; small screens step the scale down.
+   The transform doesn't reserve layout space, so the h2 carries margins
+   sized to the scaled image's overflow to keep neighbors clear. */
+.sec-head-center .heading-img {
+  --hh: clamp(44px, 7.5vw, 88px);        /* same value the img height uses */
+  margin-top: calc(var(--hh) * 0.78);    /* full upward overflow + breathing room — collapses with (and wins over) the eyebrow's 18px margin */
+  margin-bottom: calc(var(--hh) * 0.25); /* extra air before the booking line */
+}
+@media (max-width: 520px) {
+  .sec-head-center .heading-img { margin-top: calc(var(--hh) * 0.35); } /* smaller 1.62 scale overflows less */
+}
 .sec-head-center .heading-img img {
   margin-inline: auto;
   object-position: center;
   max-width: none;
-  transform: scale(2.5);    /* must out-scale the wide email line below it */
+  transform: scale(2.38);   /* must out-scale the wide email line below it */
   transform-origin: center;
 }
 @media (max-width: 520px) {
-  .sec-head-center .heading-img img { transform: scale(1.7); }
+  .sec-head-center .heading-img img { transform: scale(1.62); }
 }
 
 /* ================= ABOUT ================= */
