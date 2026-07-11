@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=17">
+  <link rel="stylesheet" href="css/style.css?v=18">
 
   <script defer src="js/vendor/gsap.min.js"></script>
   <script defer src="js/vendor/ScrollTrigger.min.js"></script>
@@ -154,24 +154,50 @@
           <h2 class="heading-img"><img src="assets/headings/play-it-loud.webp" alt="Play it loud." width="1419" height="400" loading="lazy"></h2>
         </div>
 
-        <div class="embeds">
-          <div class="embed-frame" data-reveal>
-            <p class="embed-label mono">Spotify <span>/ top tracks</span></p>
-            <div class="embed-shell" data-embed
-                 data-src="https://open.spotify.com/embed/artist/6lIq4fXOHlJ0uiAZ7lWeXF?utm_source=generator&amp;theme=0"
-                 data-height="352" data-title="Spotify player — DOCTHOR">
-              <p class="embed-note mono">LOADING SPOTIFY…</p>
+        <!-- custom player — swap the SoundCloud source by editing data-sc-url
+             (any track, playlist, or profile URL works) -->
+        <div class="player" data-player data-sc-url="https://soundcloud.com/docthor_music">
+
+          <div class="player-stage" data-reveal>
+            <figure class="player-cover">
+              <img src="assets/og.jpg" alt="" width="500" height="500" loading="lazy" data-player-art>
+            </figure>
+            <p class="player-track" data-player-title>Loading tracks…</p>
+            <div class="player-progress" data-player-progress role="slider" tabindex="0"
+                 aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="player-progress-fill" data-player-fill></div>
+            </div>
+            <div class="player-times mono">
+              <span data-player-time>0:00</span>
+              <span data-player-dur>–:––</span>
+            </div>
+            <div class="player-controls">
+              <button class="pbtn" type="button" aria-label="Previous track" data-player-prev>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6 5h2v14H6zM20 5v14L9 12z"/></svg>
+              </button>
+              <button class="pbtn pbtn-play" type="button" aria-label="Play" data-player-play>
+                <svg class="ic-play" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+                <svg class="ic-pause" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" hidden><path fill="currentColor" d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>
+              </button>
+              <button class="pbtn" type="button" aria-label="Next track" data-player-next>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg>
+              </button>
             </div>
           </div>
 
-          <div class="embed-frame" data-reveal>
-            <p class="embed-label mono">SoundCloud <span>/ latest</span></p>
-            <div class="embed-shell" data-embed
-                 data-src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fdocthor_music&amp;color=%23ff544f&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_reposts=false&amp;show_teaser=false"
-                 data-height="400" data-title="SoundCloud player — DOCTHOR">
-              <p class="embed-note mono">LOADING SOUNDCLOUD…</p>
-            </div>
+          <div class="player-listwrap" data-reveal>
+            <p class="player-list-label mono">Tracks <span data-player-count></span></p>
+            <ol class="player-list" data-player-list>
+              <li class="player-list-note mono">LOADING SOUNDCLOUD…</li>
+            </ol>
+            <p class="player-attrib mono">
+              <a href="https://soundcloud.com/docthor_music" target="_blank" rel="noopener">Powered by SoundCloud <span aria-hidden="true">↗</span></a>
+            </p>
           </div>
+
+          <!-- official SoundCloud widget lives here; visually hidden, still active.
+               In fallback mode (widget API unavailable) it becomes the visible player. -->
+          <div class="player-widget" data-player-widget></div>
         </div>
 
         <div class="platforms" aria-label="Music platforms">
@@ -254,6 +280,6 @@
 
   <button class="to-top mono" type="button" aria-label="Back to top" data-to-top hidden>↑</button>
 
-  <script src="js/main.js?v=8" defer></script>
+  <script src="js/main.js?v=10" defer></script>
 </body>
 </html>

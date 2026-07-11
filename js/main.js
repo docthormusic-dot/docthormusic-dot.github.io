@@ -74,31 +74,191 @@
     window.addEventListener("scroll", function () { stageRect = null; }, { passive: true });
   }
 
-  /* ---------- lazy music embeds ---------- */
-  var shells = document.querySelectorAll("[data-embed]");
-  function inject(shell) {
-    if (shell.dataset.done) return;
-    shell.dataset.done = "1";
-    var iframe = document.createElement("iframe");
-    iframe.src = shell.dataset.src;
-    iframe.height = shell.dataset.height;
-    iframe.title = shell.dataset.title;
-    iframe.loading = "lazy";
-    iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
-    shell.replaceChildren(iframe);
-  }
-  if ("IntersectionObserver" in window) {
-    var embedObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          inject(entry.target);
-          embedObs.unobserve(entry.target);
-        }
+  /* ---------- custom SoundCloud player ----------
+     The official widget iframe does the actual playback; the Widget API
+     (w.soundcloud.com/player/api.js) remote-controls it while our own UI
+     renders cover, transport and track list. If the API can't load, the
+     card flips to fallback mode and shows SoundCloud's player directly. */
+  var player = document.querySelector("[data-player]");
+  if (player) {
+    var pArt = player.querySelector("[data-player-art]");
+    var pTitle = player.querySelector("[data-player-title]");
+    var pFill = player.querySelector("[data-player-fill]");
+    var pProgress = player.querySelector("[data-player-progress]");
+    var pTime = player.querySelector("[data-player-time]");
+    var pDur = player.querySelector("[data-player-dur]");
+    var pPlay = player.querySelector("[data-player-play]");
+    var pList = player.querySelector("[data-player-list]");
+    var pCount = player.querySelector("[data-player-count]");
+    var fallbackArt = pArt.getAttribute("src");
+    var widget = null;
+    var rows = [];
+    var durationMs = 0;
+    var playerStarted = false;
+
+    var fmtTime = function (ms) {
+      if (!ms && ms !== 0) return "–:––";
+      var s = Math.round(ms / 1000);
+      var h = Math.floor(s / 3600);
+      var m = Math.floor(s / 60) % 60;
+      var sec = String(s % 60).padStart(2, "0");
+      return h ? h + ":" + String(m).padStart(2, "0") + ":" + sec
+               : m + ":" + sec; /* DJ sets run past an hour */
+    };
+
+    var showFallback = function () {
+      player.classList.add("player-fallback");
+    };
+
+    var setActive = function (index) {
+      rows.forEach(function (r, i) {
+        r.classList.toggle("is-active", i === index);
       });
-    }, { rootMargin: "400px 0px" });
-    shells.forEach(function (s) { embedObs.observe(s); });
-  } else {
-    shells.forEach(inject);
+      var active = rows[index];
+      if (active && active.scrollIntoView) {
+        active.scrollIntoView({ block: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+      }
+    };
+
+    var setNow = function (sound) {
+      if (!sound) return;
+      pTitle.textContent = sound.title || "Untitled";
+      durationMs = sound.duration || 0;
+      pDur.textContent = fmtTime(durationMs);
+      var art = sound.artwork_url || (sound.user && sound.user.avatar_url) || fallbackArt;
+      pArt.src = art ? art.replace("-large", "-t500x500") : fallbackArt;
+    };
+
+    var setPlaying = function (playing) {
+      pPlay.querySelector(".ic-play").hidden = playing;
+      pPlay.querySelector(".ic-pause").hidden = !playing;
+      pPlay.setAttribute("aria-label", playing ? "Pause" : "Play");
+      var active = pList.querySelector(".player-row.is-active");
+      if (active) active.classList.toggle("is-paused", !playing);
+    };
+
+    var buildList = function (sounds) {
+      pList.textContent = "";
+      rows = [];
+      sounds.forEach(function (sound, i) {
+        var li = document.createElement("li");
+        var row = document.createElement("button");
+        row.type = "button";
+        row.className = "player-row";
+
+        var num = document.createElement("span");
+        num.className = "row-num";
+        num.textContent = String(i + 1).padStart(2, "0");
+
+        var title = document.createElement("span");
+        title.className = "row-title";
+        title.textContent = sound.title || "Untitled";
+
+        var eq = document.createElement("span");
+        eq.className = "row-eq";
+        eq.setAttribute("aria-hidden", "true");
+        eq.append(document.createElement("span"), document.createElement("span"), document.createElement("span"));
+
+        var dur = document.createElement("span");
+        dur.className = "row-dur";
+        dur.textContent = sound.duration ? fmtTime(sound.duration) : "–:––";
+
+        row.append(num, title, eq, dur);
+        row.addEventListener("click", function () {
+          widget.skip(i); /* skip() jumps to the sound and plays it */
+        });
+        li.appendChild(row);
+        pList.appendChild(li);
+        rows.push(row);
+      });
+      pCount.textContent = "/ " + String(sounds.length).padStart(2, "0");
+      if (sounds.length) {
+        setNow(sounds[0]);
+        setActive(0);
+        setPlaying(false);
+      }
+    };
+
+    var wireWidget = function () {
+      var E = SC.Widget.Events;
+      widget.bind(E.READY, function () {
+        widget.getSounds(function (sounds) {
+          if (sounds && sounds.length) buildList(sounds);
+          else showFallback();
+        });
+      });
+      widget.bind(E.PLAY, function () {
+        setPlaying(true);
+        widget.getCurrentSoundIndex(function (i) { setActive(i); });
+        widget.getCurrentSound(function (s) { setNow(s); });
+      });
+      widget.bind(E.PAUSE, function () { setPlaying(false); });
+      widget.bind(E.PLAY_PROGRESS, function (e) {
+        pFill.style.width = (e.relativePosition * 100) + "%";
+        pTime.textContent = fmtTime(e.currentPosition);
+        pProgress.setAttribute("aria-valuenow", Math.round(e.relativePosition * 100));
+      });
+
+      pPlay.addEventListener("click", function () { widget.toggle(); });
+      player.querySelector("[data-player-prev]").addEventListener("click", function () { widget.prev(); });
+      player.querySelector("[data-player-next]").addEventListener("click", function () { widget.next(); });
+
+      var seekTo = function (frac) {
+        if (durationMs) widget.seekTo(Math.max(0, Math.min(1, frac)) * durationMs);
+      };
+      pProgress.addEventListener("click", function (e) {
+        var r = pProgress.getBoundingClientRect();
+        seekTo((e.clientX - r.left) / r.width);
+      });
+      pProgress.addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        e.preventDefault();
+        widget.getPosition(function (pos) {
+          if (durationMs) seekTo((pos + (e.key === "ArrowRight" ? 5000 : -5000)) / durationMs);
+        });
+      });
+    };
+
+    var initPlayer = function () {
+      if (playerStarted) return;
+      playerStarted = true;
+
+      var iframe = document.createElement("iframe");
+      iframe.title = "SoundCloud player — DOCTHOR";
+      iframe.setAttribute("allow", "autoplay");
+      iframe.src = "https://w.soundcloud.com/player/?url=" +
+        encodeURIComponent(player.dataset.scUrl) +
+        "&color=%23ff544f&auto_play=false&hide_related=true&show_comments=false" +
+        "&show_user=false&show_reposts=false&show_teaser=false&visual=false";
+      player.querySelector("[data-player-widget]").appendChild(iframe);
+
+      /* if the API never arrives (offline, blocked), show the raw widget */
+      var guard = setTimeout(showFallback, 10000);
+
+      var script = document.createElement("script");
+      script.src = "https://w.soundcloud.com/player/api.js";
+      script.onload = function () {
+        clearTimeout(guard);
+        widget = SC.Widget(iframe);
+        wireWidget();
+      };
+      script.onerror = function () {
+        clearTimeout(guard);
+        showFallback();
+      };
+      document.head.appendChild(script);
+    };
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries, obs) {
+        if (entries[0].isIntersecting) {
+          initPlayer();
+          obs.disconnect();
+        }
+      }, { rootMargin: "400px 0px" }).observe(player);
+    } else {
+      initPlayer();
+    }
   }
 
   /* ---------- background videos: load only when it makes sense ---------- */
