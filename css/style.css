@@ -753,6 +753,8 @@ h2 {
   cursor: pointer;
   transition: border-color .2s, color .2s, background .2s, transform .2s;
 }
+.pbtn svg { display: block; } /* kill inline-baseline offset so icons sit dead-center */
+.pbtn svg[hidden] { display: none; } /* display:block above must not resurrect the hidden play/pause twin */
 .pbtn:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-1px); }
 .pbtn-play {
   width: 56px;

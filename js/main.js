@@ -403,6 +403,17 @@
       }
     });
 
+    /* platform links reveal with the player card, not on their own scroll
+       position — otherwise they trail in only after extra scrolling */
+    gsap.from("#music .platform", {
+      opacity: 0,
+      y: 26,
+      duration: .55,
+      stagger: .08,
+      ease: "power2.out",
+      scrollTrigger: { trigger: "#music .player", start: "top 88%", once: true }
+    });
+
     /* refresh once media has loaded (embed heights, fonts) */
     window.addEventListener("load", function () { ScrollTrigger.refresh(); });
   }
