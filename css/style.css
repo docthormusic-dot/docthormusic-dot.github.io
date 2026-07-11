@@ -636,6 +636,9 @@ h2 {
 
 /* ---- custom SoundCloud player card ---- */
 
+/* pull the player closer to the heading (half the default section-head gap) */
+#music .sec-head { margin-bottom: clamp(20px, 3vw, 36px); }
+
 .player {
   position: relative;
   display: grid;
@@ -667,14 +670,17 @@ h2 {
   border-right: 1px solid var(--orange);
 }
 
-/* left pane: cover + transport */
+/* left pane: cover + transport — everything hangs on the cover's width,
+   centered as one column */
 .player-stage {
+  --coverw: min(100%, 38svh);
   display: flex;
   flex-direction: column;
+  align-items: center;
   min-width: 0;
 }
 .player-cover {
-  width: min(100%, 38svh);
+  width: var(--coverw);
   aspect-ratio: 1;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -687,6 +693,7 @@ h2 {
   transition: opacity .35s ease;
 }
 .player-track {
+  width: var(--coverw);
   margin-top: 18px;
   font-family: var(--font-display);
   font-weight: 600;
@@ -700,6 +707,7 @@ h2 {
   white-space: nowrap;
 }
 .player-progress {
+  width: var(--coverw); /* timeline matches the cover, centered with it */
   margin-top: 14px;
   height: 5px;
   background: var(--line);
@@ -714,6 +722,7 @@ h2 {
   background: linear-gradient(90deg, var(--orange), var(--orange-hot));
 }
 .player-times {
+  width: var(--coverw);
   margin-top: 8px;
   display: flex;
   justify-content: space-between;
@@ -725,6 +734,7 @@ h2 {
   margin-top: 16px;
   display: flex;
   align-items: center;
+  justify-content: center; /* transport centered under the cover */
   gap: 12px;
 }
 .pbtn {
@@ -864,7 +874,7 @@ h2 {
 
 @media (max-width: 860px) {
   .player { grid-template-columns: 1fr; }
-  .player-cover { width: min(100%, 300px); }
+  .player-stage { --coverw: min(100%, 300px); }
   .player-list { max-height: 40svh; }
 }
 
