@@ -667,7 +667,10 @@ h2 {
 #music .sec-head { margin-bottom: clamp(20px, 3vw, 36px); }
 /* slightly tighter vertical padding so heading + player + platforms fit 100svh */
 @media (min-width: 1024px) and (min-height: 640px) {
-  #music.section { padding-block: clamp(40px, 5.5vh, 76px); }
+  #music.section {
+    padding-block: clamp(40px, 5.5vh, 76px);
+    padding-top: calc(clamp(40px, 5.5vh, 76px) + clamp(24px, 4vh, 40px));
+  }
   /* About snaps flush to the top — give its eyebrow extra breathing room */
   #about.section { padding-top: calc(clamp(48px, 7vh, 90px) + clamp(24px, 4vh, 40px)); }
 }
@@ -1120,6 +1123,49 @@ body.footer-open .to-top.show {
   transform: translateY(calc(-1 * var(--footer-h, 100px)));
 }
 .to-top[hidden] { display: none; }
+
+/* ================= SECTION DOTS ================= */
+
+/* right-edge snap indicator — shares the to-top button's reveal condition
+   and horizontal center (to-top is 48px wide, dots are 10px: offset +19px) */
+.dots {
+  position: fixed;
+  right: calc(clamp(16px, 2.5vw, 28px) + 19px);
+  top: 50%;
+  z-index: 46;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(10px);
+  transition: opacity .35s ease, transform .45s cubic-bezier(.2, .7, .2, 1);
+}
+.dots.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%);
+}
+.dots a {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--dim);
+  background: transparent;
+  transition: background .3s, border-color .3s,
+              transform .45s cubic-bezier(.34, 1.56, .64, 1); /* springy pop on section change */
+}
+.dots a:hover { border-color: var(--orange); transform: scale(1.3); }
+.dots a.is-active {
+  background: var(--orange);
+  border-color: var(--orange);
+  transform: scale(1.4);
+}
+.dots[hidden] { display: none; }
+/* dots belong to the snapping world — hide where snap is off */
+@media (max-width: 1023px), (max-height: 639px) {
+  .dots { display: none; }
+}
 
 /* ================= REDUCED MOTION ================= */
 

@@ -42,12 +42,18 @@
   var sections = menuLinks
     .map(function (a) { return document.querySelector(a.getAttribute("href")); })
     .filter(Boolean);
+  var dotEls = Array.prototype.slice.call(document.querySelectorAll("[data-dot]"));
   if ("IntersectionObserver" in window) {
     var activeSection = "";
     var markActive = function (id) {
       activeSection = id;
       menuLinks.forEach(function (a) {
         a.setAttribute("aria-current", a.getAttribute("href") === "#" + id ? "true" : "false");
+      });
+      dotEls.forEach(function (d) {
+        var on = d.getAttribute("href") === "#" + id;
+        d.classList.toggle("is-active", on);
+        d.setAttribute("aria-current", on ? "true" : "false");
       });
     };
     var sectionObs = new IntersectionObserver(function (entries) {
@@ -352,12 +358,16 @@
     }
   }
 
-  /* ---------- back to top ---------- */
+  /* ---------- back to top + section dots (same reveal condition) ---------- */
   var toTop = document.querySelector("[data-to-top]");
+  var dotsNav = document.querySelector("[data-dots]");
+  if (dotsNav) dotsNav.hidden = false;
   if (toTop) {
     toTop.hidden = false;
     var updateToTop = function () {
-      toTop.classList.toggle("show", window.scrollY > window.innerHeight * 0.6);
+      var show = window.scrollY > window.innerHeight * 0.6;
+      toTop.classList.toggle("show", show);
+      if (dotsNav) dotsNav.classList.toggle("show", show);
     };
     window.addEventListener("scroll", updateToTop, { passive: true });
     updateToTop();
