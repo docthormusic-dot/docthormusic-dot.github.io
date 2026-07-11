@@ -26,6 +26,11 @@
   menuLinks.forEach(function (a) {
     a.addEventListener("click", function () { setMenu(false); });
   });
+  /* logo → hero: closes the menu like a link, but stays out of the
+     active-section observer (its #top target is the whole body) */
+  Array.prototype.forEach.call(document.querySelectorAll("[data-menu-close]"), function (el) {
+    el.addEventListener("click", function () { setMenu(false); });
+  });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && document.body.classList.contains("menu-open")) {
       setMenu(false);

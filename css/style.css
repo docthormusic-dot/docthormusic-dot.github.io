@@ -165,6 +165,7 @@ body.menu-open .menu {
 }
 
 /* chrome emblem above the links — sized to the width of the link text */
+.menu-logo-link { display: block; }
 .menu-logo {
   width: min(60vw, 300px);
   max-height: 22svh; /* short screens: don't crowd the links out */
@@ -174,6 +175,7 @@ body.menu-open .menu {
   transition: opacity .5s ease .04s, transform .5s cubic-bezier(.2, .7, .2, 1) .04s;
 }
 body.menu-open .menu-logo { opacity: 1; transform: none; }
+body.menu-open .menu-logo-link:hover .menu-logo { transform: scale(1.04); }
 
 .menu-links {
   display: flex;
