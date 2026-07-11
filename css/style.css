@@ -554,12 +554,18 @@ h2 {
   transform: scale(1.53);
   transform-origin: left center;
 }
+/* NOTE: .booking-inner is a flex column, so this h2 shrinks to fit its
+   content — a % max-width here resolves against the heading itself and
+   cancels the scale-up. No % guard; small screens step the scale down. */
 .sec-head-center .heading-img img {
   margin-inline: auto;
   object-position: center;
-  max-width: 53%;           /* leaves room for the larger 1.86 scale-up */
-  transform: scale(1.86);
+  max-width: none;
+  transform: scale(2.5);    /* must out-scale the wide email line below it */
   transform-origin: center;
+}
+@media (max-width: 520px) {
+  .sec-head-center .heading-img img { transform: scale(1.7); }
 }
 
 /* ================= ABOUT ================= */
