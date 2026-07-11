@@ -164,6 +164,17 @@ body.menu-open .menu {
   transition: opacity .4s ease;
 }
 
+/* chrome emblem above the links — sized to the width of the link text */
+.menu-logo {
+  width: min(60vw, 300px);
+  max-height: 22svh; /* short screens: don't crowd the links out */
+  object-fit: contain;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .5s ease .04s, transform .5s cubic-bezier(.2, .7, .2, 1) .04s;
+}
+body.menu-open .menu-logo { opacity: 1; transform: none; }
+
 .menu-links {
   display: flex;
   flex-direction: column;
