@@ -638,6 +638,10 @@ h2 {
 
 /* pull the player closer to the heading (half the default section-head gap) */
 #music .sec-head { margin-bottom: clamp(20px, 3vw, 36px); }
+/* slightly tighter vertical padding so heading + player + platforms fit 100svh */
+@media (min-width: 1024px) and (min-height: 640px) {
+  #music.section { padding-block: clamp(40px, 5.5vh, 76px); }
+}
 
 .player {
   position: relative;
@@ -673,7 +677,7 @@ h2 {
 /* left pane: cover + transport — everything hangs on the cover's width,
    centered as one column */
 .player-stage {
-  --coverw: min(100%, 38svh);
+  --coverw: min(100%, 34svh); /* sized so the full card lands ~6% shorter and the section fits one screen */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -729,7 +733,6 @@ h2 {
   color: var(--dim);
   font-size: 11px;
 }
-.player-times [data-player-time] { color: var(--gold); }
 .player-controls {
   margin-top: 16px;
   display: flex;
@@ -745,6 +748,7 @@ h2 {
   justify-content: center;
   background: rgba(6, 6, 7, .5);
   border: 1px solid var(--line);
+  border-radius: 50%;
   color: var(--chrome);
   cursor: pointer;
   transition: border-color .2s, color .2s, background .2s, transform .2s;
@@ -772,7 +776,7 @@ h2 {
   list-style: none;
   overflow-y: auto;
   min-height: 0;
-  max-height: clamp(300px, 48svh, 480px);
+  max-height: clamp(282px, 45svh, 451px); /* -6%, in step with the cover */
   border-top: 1px solid var(--line);
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
@@ -879,7 +883,9 @@ h2 {
 }
 
 .platforms {
-  margin-top: clamp(28px, 4vw, 44px);
+  /* mirrors the VISUAL heading -> player gap (the scaled heading image
+     overflows its layout box, so the on-screen distance is ~24px) */
+  margin-top: clamp(14px, 1.5vw, 24px);
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
