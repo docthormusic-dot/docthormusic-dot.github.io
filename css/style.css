@@ -542,6 +542,26 @@ h2 {
   to   { background-position: 100% 100%; }
 }
 
+/* rendered chrome heading images — drop-in replacement for the h2 text,
+   sized to the responsive scale of the old font-size clamp, then scaled up
+   via transform so the layout box (and everything around it) stays put */
+.heading-img img {
+  height: clamp(44px, 7.5vw, 88px);
+  width: auto;
+  max-width: 65%;           /* leaves room for the 1.53 scale-up on narrow screens */
+  object-fit: contain;      /* if max-width bites, shrink — don't distort */
+  object-position: left center;
+  transform: scale(1.53);
+  transform-origin: left center;
+}
+.sec-head-center .heading-img img {
+  margin-inline: auto;
+  object-position: center;
+  max-width: 53%;           /* leaves room for the larger 1.86 scale-up */
+  transform: scale(1.86);
+  transform-origin: center;
+}
+
 /* ================= ABOUT ================= */
 
 .about-grid {
@@ -554,12 +574,12 @@ h2 {
 .about-photo {
   overflow: hidden;
   background: #000;
-  max-height: 72svh; /* keep the 2:3 photo inside the snapped viewport */
+  max-height: 66svh; /* slightly under the heading's scale so the photo doesn't compete with it */
 }
 .about-photo img {
   width: 100%;
   height: 100%;
-  max-height: 72svh;
+  max-height: 66svh;
   object-fit: contain;
   transition: transform .6s ease;
 }

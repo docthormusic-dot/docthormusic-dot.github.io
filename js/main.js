@@ -222,6 +222,17 @@
       scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
     });
 
+    /* scroll cue: gone within the first quarter of the hero, so the
+       parallax-pushed CTAs never collide with it mid-transition.
+       immediateRender: false — the entrance timeline owns the cue's
+       opacity until the first real scroll render */
+    gsap.fromTo(".scroll-cue", { opacity: 1 }, {
+      opacity: 0,
+      ease: "none",
+      immediateRender: false,
+      scrollTrigger: { trigger: ".hero", start: "top top", end: "25% top", scrub: true }
+    });
+
     /* batched scroll reveals */
     gsap.set("[data-reveal]", { opacity: 0, y: 26 });
     ScrollTrigger.batch("[data-reveal]", {
