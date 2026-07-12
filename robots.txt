@@ -1,0 +1,6 @@
+# DOCTHOR — allow everything, point crawlers at the sitemap
+# LAUNCH: replace docthor.example with the real domain
+User-agent: *
+Allow: /
+
+Sitemap: https://docthor.example/sitemap.xml

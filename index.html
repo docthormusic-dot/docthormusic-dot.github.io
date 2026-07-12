@@ -4,14 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DOCTHOR — Schranz &amp; Hard Techno DJ / Producer</title>
-  <meta name="description" content="DOCTHOR is a rising force in hard techno. Dark, distorted, driving Schranz from Stuttgart — based in Valencia &amp; Stuttgart, available worldwide. Listen and book.">
-  <!-- TODO when domain is live: set <link rel="canonical"> and switch og:image / og:url to absolute URLs -->
+  <meta name="description" content="DOCTHOR — Schranz &amp; hard techno DJ and producer from Stuttgart, based in Valencia &amp; Stuttgart. Dark, distorted, driving sets. Bookings worldwide — listen and book.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+  <!-- LAUNCH: replace every "docthor.example" with the real domain (see 02_Working/site-seo.md) -->
+  <link rel="canonical" href="https://docthor.example/">
+
   <meta property="og:type" content="website">
-  <meta property="og:title" content="DOCTHOR — Schranz &amp; Hard Techno">
-  <meta property="og:description" content="Dark. Distorted. Driving. Listen and book DOCTHOR.">
-  <meta property="og:image" content="assets/og.jpg">
+  <meta property="og:site_name" content="DOCTHOR">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://docthor.example/">
+  <meta property="og:title" content="DOCTHOR — Schranz &amp; Hard Techno DJ / Producer">
+  <meta property="og:description" content="Dark. Distorted. Driving. Schranz from Stuttgart × Valencia — listen and book DOCTHOR.">
+  <meta property="og:image" content="https://docthor.example/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="DOCTHOR — chrome winged emblem on black">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DOCTHOR — Schranz &amp; Hard Techno DJ / Producer">
+  <meta name="twitter:description" content="Dark. Distorted. Driving. Schranz from Stuttgart × Valencia — listen and book DOCTHOR.">
+  <meta name="twitter:image" content="https://docthor.example/assets/og.jpg">
+
   <meta name="theme-color" content="#060607">
   <meta name="color-scheme" content="dark">
+  <link rel="manifest" href="site.webmanifest">
 
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
@@ -21,7 +38,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css?v=30">
+  <link rel="stylesheet" href="css/style.css?v=31">
 
   <script defer src="js/vendor/gsap.min.js"></script>
   <script defer src="js/vendor/ScrollTrigger.min.js"></script>
@@ -29,19 +46,45 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "DOCTHOR",
-    "genre": ["Schranz", "Hard Techno"],
-    "foundingDate": "2022",
-    "email": "mailto:docthormusic@gmail.com",
-    "sameAs": [
-      "https://open.spotify.com/artist/6lIq4fXOHlJ0uiAZ7lWeXF",
-      "https://www.beatport.com/artist/docthor/1145242",
-      "https://music.apple.com/de/artist/docthor/1651164426",
-      "https://soundcloud.com/docthor_music",
-      "https://www.instagram.com/docthor_music/",
-      "https://www.tiktok.com/@docthor_music",
-      "https://www.youtube.com/@docthor_music"
+    "@graph": [
+      {
+        "@type": "MusicGroup",
+        "@id": "https://docthor.example/#artist",
+        "name": "DOCTHOR",
+        "alternateName": "DocThor",
+        "url": "https://docthor.example/",
+        "image": "https://docthor.example/assets/og.jpg",
+        "logo": "https://docthor.example/assets/logo.png",
+        "description": "DOCTHOR is a rising force in hard techno — relentless, high-intensity Schranz sets and productions. Born in Stuttgart, based between Valencia and Stuttgart, available worldwide.",
+        "genre": ["Schranz", "Hard Techno"],
+        "foundingDate": "2022",
+        "foundingLocation": {
+          "@type": "City",
+          "name": "Stuttgart"
+        },
+        "location": [
+          { "@type": "City", "name": "Valencia" },
+          { "@type": "City", "name": "Stuttgart" }
+        ],
+        "email": "docthormusic@gmail.com",
+        "sameAs": [
+          "https://open.spotify.com/artist/6lIq4fXOHlJ0uiAZ7lWeXF",
+          "https://www.beatport.com/artist/docthor/1145242",
+          "https://music.apple.com/de/artist/docthor/1651164426",
+          "https://soundcloud.com/docthor_music",
+          "https://www.instagram.com/docthor_music/",
+          "https://www.tiktok.com/@docthor_music",
+          "https://www.youtube.com/@docthor_music"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://docthor.example/#website",
+        "url": "https://docthor.example/",
+        "name": "DOCTHOR",
+        "about": { "@id": "https://docthor.example/#artist" },
+        "inLanguage": "en"
+      }
     ]
   }
   </script>
@@ -95,6 +138,7 @@
       </video>
       <div class="hero-veil" aria-hidden="true"></div>
 
+      <h1 class="sr-only">DOCTHOR — Schranz &amp; Hard Techno DJ and producer from Stuttgart, based in Valencia &amp; Stuttgart</h1>
       <div class="hero-core" data-hero-core>
         <div class="logo-stage" role="img"
              aria-label="DOCTHOR chrome emblem — move the cursor over it to reveal a portrait of DocThor" data-logo-stage>
