@@ -14,8 +14,11 @@
   --orange-hot: #ff7d79;
   --gold: #ffe783;        /* sparing highlight: now-playing, live values */
 
-  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --font-body: "Barlow", "Helvetica Neue", sans-serif;
+  /* type system: Big Shoulders = industrial condensed display voice
+     (angular terminals echo the chrome headings); IBM Plex Sans + Mono
+     form one engineered family for body and HUD labels */
+  --font-display: "Big Shoulders", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
 
   --nav-h: 64px;
