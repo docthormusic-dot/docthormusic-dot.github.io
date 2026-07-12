@@ -289,9 +289,11 @@
       if (!video) return;
       var conn = navigator.connection || {};
       if (reducedMotion || conn.saveData || !mqWide.matches) return;
-      var source = video.querySelector("source[data-src]");
-      if (!source || source.getAttribute("src")) return;
-      source.src = source.dataset.src;
+      var sources = video.querySelectorAll("source[data-src]");
+      if (!sources.length || sources[0].getAttribute("src")) return;
+      Array.prototype.forEach.call(sources, function (source) {
+        source.src = source.dataset.src; /* browser picks the first type it can play */
+      });
       video.load();
       var p = video.play();
       if (p && p.catch) p.catch(function () { /* poster remains */ });

@@ -89,6 +89,8 @@
     <!-- ============ HERO ============ -->
     <section class="hero" aria-label="DOCTHOR">
       <video class="hero-video" poster="assets/hero-poster.jpg" muted loop playsinline autoplay preload="none" aria-hidden="true" data-hero-video>
+        <!-- seamless loop (first frame == last frame); AV1 for modern browsers, H.264 fallback -->
+        <source data-src="assets/hero-loop-av1.mp4" type='video/mp4; codecs="av01.0.08M.08"'>
         <source data-src="assets/hero-loop.mp4" type="video/mp4">
       </video>
       <div class="hero-veil" aria-hidden="true"></div>
@@ -291,6 +293,6 @@
     <a href="#booking" aria-label="Booking" data-dot></a>
   </nav>
 
-  <script src="js/main.js?v=14" defer></script>
+  <script src="js/main.js?v=15" defer></script>
 </body>
 </html>
