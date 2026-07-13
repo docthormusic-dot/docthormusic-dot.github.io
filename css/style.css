@@ -609,7 +609,7 @@ h2 {
   margin-bottom: calc(var(--hh) * 0.25); /* extra air before the booking line */
 }
 @media (max-width: 520px) {
-  .sec-head-center .heading-img { margin-top: calc(var(--hh) * 0.35); } /* smaller 1.62 scale overflows less */
+  .sec-head-center .heading-img { margin-top: calc(var(--hh) * 0.55); } /* matches the 2.0 phone scale-up */
 }
 .sec-head-center .heading-img img {
   margin-inline: auto;
@@ -619,7 +619,9 @@ h2 {
   transform-origin: center;
 }
 @media (max-width: 520px) {
-  .sec-head-center .heading-img img { transform: scale(1.62); }
+  /* the heading must dominate the section on phones too — 2.0 is the
+     largest scale that clears the container edges at 360px wide */
+  .sec-head-center .heading-img img { transform: scale(2.0); }
 }
 
 /* ================= ABOUT ================= */
@@ -671,8 +673,19 @@ h2 {
 }
 
 @media (max-width: 860px) {
-  .about-grid { grid-template-columns: 1fr; }
-  .about-photo { max-width: 440px; }
+  .about-grid { grid-template-columns: 1fr; gap: 22px; }
+  /* stacked mode: crop the 2:3 portrait to a wide 3:2 window so the
+     whole section reads in one screen */
+  .about-photo {
+    max-width: none;
+    max-height: none;
+    aspect-ratio: 3 / 2;
+  }
+  .about-photo img {
+    max-height: none;
+    object-fit: cover;
+    object-position: 50% 22%; /* keep the face in frame */
+  }
 }
 
 /* ================= MUSIC ================= */
@@ -931,6 +944,21 @@ h2 {
   .player-stage { --coverw: min(100%, 300px); }
   .player-list { max-height: 40svh; }
 }
+/* phones: compact player so cover, transport, list and platform links
+   land close to a single screen */
+@media (max-width: 640px) {
+  .player { padding: 16px; gap: 18px; }
+  .player-stage { --coverw: min(100%, 190px); }
+  .player-track { margin-top: 12px; font-size: 15px; }
+  .player-progress { margin-top: 10px; }
+  .player-controls { margin-top: 12px; }
+  .pbtn { width: 42px; height: 42px; }
+  .pbtn-play { width: 50px; height: 50px; }
+  .player-list { max-height: 26svh; }
+  .player-row { padding: 10px 8px; font-size: 14px; }
+  .platforms { gap: 8px; }
+  .platform { padding: 9px 14px; font-size: 11px; }
+}
 
 .platforms {
   /* mirrors the VISUAL heading -> player gap (the scaled heading image
@@ -962,7 +990,7 @@ h2 {
   gap: clamp(16px, 2.5vw, 28px);
 }
 @media (max-width: 860px) {
-  .social-grid { grid-template-columns: 1fr; }
+  .social-grid { grid-template-columns: 1fr; gap: 12px; }
 }
 
 .social-tile {
@@ -1020,6 +1048,22 @@ h2 {
   line-height: 1;
 }
 .tile-handle { color: var(--dim); font-size: 12px; }
+
+/* stacked mode: portrait tiles become wide banners — all three fit one
+   screen with the heading (must come AFTER the base .social-tile rules,
+   same specificity) */
+@media (max-width: 860px) {
+  .social-tile {
+    aspect-ratio: auto;
+    height: 21svh;
+    min-height: 120px;
+    max-height: none;
+  }
+  .social-tile img { object-position: 50% 30%; }
+  .tile-name { font-size: 22px; }
+  .tile-label { left: 16px; bottom: 14px; }
+  .tile-arrow { top: 10px; right: 14px; font-size: 18px; }
+}
 
 /* ================= BOOKING ================= */
 
@@ -1181,6 +1225,36 @@ body.footer-open .to-top.show {
 /* dots belong to the snapping world — hide where snap is off */
 @media (max-width: 1023px), (max-height: 639px) {
   .dots { display: none; }
+}
+
+/* ================= MOBILE POLISH ================= */
+
+/* phones: type as big as necessary, as small as possible — and tighter
+   vertical rhythm so each section approaches a single screen */
+@media (max-width: 640px) {
+  body { font-size: 15.5px; line-height: 1.6; }
+  .section { padding-block: 44px; }
+  .sec-head { margin-bottom: 26px; }
+  .eyebrow { margin-bottom: 12px; }
+
+  .about-body { font-size: 15px; }
+  .about-body p:first-child { font-size: 16.5px; }
+  .facts { margin-top: 22px; gap: 8px; }
+  .facts li { padding: 7px 10px; font-size: 10px; }
+
+  .booking-line { font-size: 14px; } /* subordinate to the BOOK DOCTHOR heading */
+  .booking-mail { font-size: clamp(22px, 6.4vw, 32px); }
+  .booking-alt { margin-top: 18px; font-size: 11px; }
+
+  .ticker-track span { font-size: 14px; }
+  .menu-mail { font-size: 12px; }
+}
+
+/* touch devices: the flashlight reveal follows the finger — dragging on
+   the emblem drives the mask instead of scrolling (page still scrolls
+   from anywhere else in the hero) */
+@media (pointer: coarse) {
+  .logo-stage { touch-action: none; }
 }
 
 /* ================= REDUCED MOTION ================= */

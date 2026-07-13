@@ -87,7 +87,16 @@
       stageRect = stage.getBoundingClientRect();
       moveFlashlight(e);
     });
+    /* touch: finger down = flashlight on (touch-action: none in CSS lets
+       pointermove track the drag); lifting the finger clears it */
+    stage.addEventListener("pointerdown", function (e) {
+      stageRect = stage.getBoundingClientRect();
+      moveFlashlight(e);
+    });
     stage.addEventListener("pointermove", moveFlashlight);
+    stage.addEventListener("pointerup", function (e) {
+      if (e.pointerType !== "mouse") hideFlashlight();
+    });
     stage.addEventListener("pointerleave", hideFlashlight);
     stage.addEventListener("pointercancel", hideFlashlight);
     /* rect shifts with resize and hero parallax */
