@@ -1228,6 +1228,48 @@ body.footer-open .to-top.show {
   .dots { display: none; }
 }
 
+/* ================= LEGAL PAGES ================= */
+
+/* sub-pages (imprint, privacy, cookies, terms): static layout, same skin */
+.legal-body { background: var(--steel-950); }
+.legal-body .nav {
+  background: rgba(6, 6, 7, .82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+.legal-wrap {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: calc(var(--nav-h) + 48px) var(--pad) 72px;
+}
+.legal-wrap h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 5vw, 54px);
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  line-height: 1;
+  margin: 10px 0 28px;
+}
+.legal-wrap h2 {
+  font-size: clamp(20px, 2.6vw, 26px);
+  margin: 36px 0 12px;
+  letter-spacing: .03em;
+}
+.legal-wrap p, .legal-wrap li { color: var(--dim); font-size: 15.5px; }
+.legal-wrap p { margin-bottom: 14px; }
+.legal-wrap ul { margin: 0 0 14px 20px; }
+.legal-wrap li { margin-bottom: 6px; }
+.legal-wrap strong { color: var(--chrome); font-weight: 500; }
+.legal-wrap a { color: var(--chrome); border-bottom: 1px solid var(--line); transition: color .2s, border-color .2s; }
+.legal-wrap a:hover { color: var(--orange); border-color: var(--orange); }
+.legal-wrap address { font-style: normal; color: var(--chrome); line-height: 1.8; margin-bottom: 14px; }
+.legal-updated { font-size: 12px !important; margin-top: 40px; }
+/* footer behaves statically on sub-pages (no JS there) */
+.legal-body .footer { position: static !important; transform: none !important; }
+.footer-legal a { color: var(--dim); }
+
 /* ================= MOBILE POLISH ================= */
 
 /* phones: type as big as necessary, as small as possible — and tighter
