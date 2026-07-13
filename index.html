@@ -123,7 +123,7 @@
   <!-- fixed flowing background for everything below the hero -->
   <div class="flow-bg" aria-hidden="true" data-flow>
     <video class="flow-video" poster="assets/swirl-static.jpg" muted loop playsinline autoplay preload="none" data-flow-video>
-      <source data-src="assets/flow-loop.mp4" type="video/mp4">
+      <source data-src="assets/flow-loop.mp4" data-src-mobile="assets/flow-loop-mobile.mp4" type="video/mp4">
     </video>
     <div class="flow-dim"></div>
   </div>
@@ -132,9 +132,10 @@
     <!-- ============ HERO ============ -->
     <section class="hero" aria-label="DOCTHOR">
       <video class="hero-video" poster="assets/hero-poster.jpg" muted loop playsinline autoplay preload="none" aria-hidden="true" data-hero-video>
-        <!-- seamless loop (first frame == last frame); AV1 for modern browsers, H.264 fallback -->
-        <source data-src="assets/hero-loop-av1.mp4" type='video/mp4; codecs="av01.0.08M.08"'>
-        <source data-src="assets/hero-loop.mp4" type="video/mp4">
+        <!-- seamless loop (first frame == last frame); AV1 for modern browsers, H.264 fallback.
+             data-src-mobile = lightweight 720p encodes served below 768px -->
+        <source data-src="assets/hero-loop-av1.mp4" data-src-mobile="assets/hero-loop-av1-720.mp4" type='video/mp4; codecs="av01.0.08M.08"'>
+        <source data-src="assets/hero-loop.mp4" data-src-mobile="assets/hero-loop-720.mp4" type="video/mp4">
       </video>
       <div class="hero-veil" aria-hidden="true"></div>
 
@@ -337,6 +338,6 @@
     <a href="#booking" aria-label="Booking" data-dot></a>
   </nav>
 
-  <script src="js/main.js?v=17" defer></script>
+  <script src="js/main.js?v=18" defer></script>
 </body>
 </html>

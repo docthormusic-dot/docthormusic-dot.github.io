@@ -291,17 +291,19 @@
     }
   }
 
-  /* ---------- background videos: load only when it makes sense ---------- */
+  /* ---------- background videos: full quality on desktop, lightweight
+     720p encodes on narrow viewports (data-src-mobile) ---------- */
   var mqWide = window.matchMedia("(min-width: 768px)");
   function makeVideoLoader(video) {
     return function () {
       if (!video) return;
       var conn = navigator.connection || {};
-      if (reducedMotion || conn.saveData || !mqWide.matches) return;
+      if (reducedMotion || conn.saveData) return;
       var sources = video.querySelectorAll("source[data-src]");
       if (!sources.length || sources[0].getAttribute("src")) return;
       Array.prototype.forEach.call(sources, function (source) {
-        source.src = source.dataset.src; /* browser picks the first type it can play */
+        /* browser picks the first type it can play */
+        source.src = (!mqWide.matches && source.dataset.srcMobile) || source.dataset.src;
       });
       video.load();
       var p = video.play();
