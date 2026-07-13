@@ -1,1 +1,24 @@
 .DS_Store
+
+# never commit source/master formats (see tools/audit-rules.conf + MEDIA_PROTECTION.md)
+*.psd
+*.ai
+*.eps
+*.sketch
+*.fig
+*.xcf
+*.tif
+*.tiff
+*.cr2
+*.nef
+*.arw
+*.dng
+*.mov
+*.wav
+*.aif
+*.aiff
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz

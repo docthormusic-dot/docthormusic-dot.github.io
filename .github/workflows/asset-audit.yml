@@ -1,0 +1,16 @@
+name: Asset audit
+# Blocks accidental deployment of source/master files. GitHub Pages still
+# deploys from the branch; this check makes violations loudly visible on
+# every push and pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run asset audit
+        run: sh tools/audit-assets.sh
