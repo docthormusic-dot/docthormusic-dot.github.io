@@ -920,6 +920,45 @@ h2 {
 .player-attrib a { color: var(--dim); transition: color .2s; }
 .player-attrib a:hover { color: var(--orange); }
 
+/* ---- SoundCloud consent gate (two-click solution) ---- */
+.player.awaiting-consent .player-stage,
+.player.awaiting-consent .player-listwrap { display: none; }
+.player-consent {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 48px);
+}
+.player-consent-eyebrow { color: var(--orange); }
+.player-consent-text {
+  max-width: 56ch;
+  color: var(--dim);
+  font-size: 15px;
+}
+.player-consent-text a { color: var(--chrome); border-bottom: 1px solid var(--line); transition: color .2s, border-color .2s; }
+.player-consent-text a:hover { color: var(--orange); border-color: var(--orange); }
+.player-consent-note { color: var(--dim); font-size: 11px; }
+.player-consent[hidden] { display: none; }
+
+.player-withdraw {
+  margin-left: 14px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 1px;
+  color: var(--dim);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.player-withdraw:hover { color: var(--orange); border-color: var(--orange); }
+.player-withdraw[hidden] { display: none; }
+
 /* the real SoundCloud widget: present + active, visually parked off-canvas */
 .player-widget {
   position: absolute;

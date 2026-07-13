@@ -105,12 +105,21 @@
   }
 
   /* ---------- custom SoundCloud player ----------
-     The official widget iframe does the actual playback; the Widget API
-     (w.soundcloud.com/player/api.js) remote-controls it while our own UI
+     Privacy gate: NOTHING contacts SoundCloud until the visitor presses
+     "Load SoundCloud player" (TDDDG s25(1) / Art. 6(1)(a) GDPR consent).
+     The choice is stored in localStorage under "docthor-soundcloud-consent"
+     (value "granted", kept until withdrawn via the button in the player or
+     by clearing site data). After consent, the official widget iframe does
+     the playback; the Widget API remote-controls it while our own UI
      renders cover, transport and track list. If the API can't load, the
      card flips to fallback mode and shows SoundCloud's player directly. */
   var player = document.querySelector("[data-player]");
   if (player) {
+    var CONSENT_KEY = "docthor-soundcloud-consent";
+    var consentGranted = function () {
+      try { return localStorage.getItem(CONSENT_KEY) === "granted"; }
+      catch (e) { return false; }
+    };
     var pArt = player.querySelector("[data-player-art]");
     var pTitle = player.querySelector("[data-player-title]");
     var pFill = player.querySelector("[data-player-fill]");
@@ -249,8 +258,24 @@
       });
     };
 
+    var applyConsentUI = function () {
+      var granted = consentGranted();
+      player.classList.toggle("awaiting-consent", !granted);
+      var consentBlock = player.querySelector("[data-player-consent]");
+      if (consentBlock) consentBlock.hidden = granted;
+      var withdraw = player.querySelector("[data-consent-withdraw]");
+      if (withdraw) withdraw.hidden = !granted;
+      if (granted) {
+        /* the reveal batch may have run while these were display:none */
+        Array.prototype.forEach.call(player.querySelectorAll(".player-stage, .player-listwrap"), function (el) {
+          el.style.opacity = 1;
+          el.style.transform = "none";
+        });
+      }
+    };
+
     var initPlayer = function () {
-      if (playerStarted) return;
+      if (playerStarted || !consentGranted()) return;
       playerStarted = true;
 
       var iframe = document.createElement("iframe");
@@ -279,9 +304,34 @@
       document.head.appendChild(script);
     };
 
+    /* consent controls: grant loads the player immediately; withdrawal
+       clears the stored choice and reloads so no SoundCloud resource
+       survives in the page */
+    var loadBtn = player.querySelector("[data-consent-load]");
+    if (loadBtn) {
+      loadBtn.addEventListener("click", function () {
+        try { localStorage.setItem(CONSENT_KEY, "granted"); } catch (e) { /* still load this visit */ }
+        player.classList.remove("awaiting-consent");
+        var consentBlock = player.querySelector("[data-player-consent]");
+        if (consentBlock) consentBlock.hidden = true;
+        applyConsentUI();
+        initPlayer();
+      });
+    }
+    var withdrawBtn = player.querySelector("[data-consent-withdraw]");
+    if (withdrawBtn) {
+      withdrawBtn.addEventListener("click", function () {
+        try { localStorage.removeItem(CONSENT_KEY); } catch (e) {}
+        window.location.reload();
+      });
+    }
+
+    applyConsentUI();
+
+    /* lazy init only applies once consent exists (this visit or stored) */
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries, obs) {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && consentGranted()) {
           initPlayer();
           obs.disconnect();
         }

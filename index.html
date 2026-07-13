@@ -39,7 +39,7 @@
   <link rel="preload" href="assets/fonts/ibm-plex-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=1">
 
-  <link rel="stylesheet" href="css/style.css?v=37">
+  <link rel="stylesheet" href="css/style.css?v=38">
 
   <script defer src="js/vendor/gsap.min.js"></script>
   <script defer src="js/vendor/ScrollTrigger.min.js"></script>
@@ -207,7 +207,17 @@
 
         <!-- custom player — swap the SoundCloud source by editing data-sc-url
              (any track, playlist, or profile URL works) -->
-        <div class="player" data-player data-sc-url="https://soundcloud.com/docthor_music">
+        <div class="player awaiting-consent" data-player data-sc-url="https://soundcloud.com/docthor_music">
+
+          <!-- two-click privacy gate: nothing contacts SoundCloud until the
+               button below is pressed (see main.js, consent stored in
+               localStorage under "docthor-soundcloud-consent") -->
+          <div class="player-consent" data-player-consent role="region" aria-label="SoundCloud consent">
+            <p class="player-consent-eyebrow mono">// External content</p>
+            <p class="player-consent-text">SoundCloud content is blocked to protect your privacy. When you load the player, data such as your IP address may be transmitted to SoundCloud, and SoundCloud may use cookies or similar technologies for functional, analytics, advertising, or profiling purposes. Details in our <a href="/privacy/privacy-policy/">privacy policy</a>.</p>
+            <button class="btn btn-solid" type="button" data-consent-load>Load SoundCloud player</button>
+            <p class="player-consent-note mono">Your choice is saved in your browser until you withdraw it. Everything else on this site works without SoundCloud.</p>
+          </div>
 
           <div class="player-stage" data-reveal>
             <figure class="player-cover">
@@ -243,6 +253,7 @@
             </ol>
             <p class="player-attrib mono">
               <a href="https://soundcloud.com/docthor_music" target="_blank" rel="noopener">Powered by SoundCloud <span aria-hidden="true">↗</span></a>
+              <button class="player-withdraw mono" type="button" data-consent-withdraw hidden>Withdraw SoundCloud consent</button>
             </p>
           </div>
 
@@ -345,6 +356,6 @@
     <a href="#booking" aria-label="Booking" data-dot></a>
   </nav>
 
-  <script src="js/main.js?v=18" defer></script>
+  <script src="js/main.js?v=19" defer></script>
 </body>
 </html>
