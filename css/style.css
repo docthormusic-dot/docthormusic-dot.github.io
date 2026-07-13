@@ -125,14 +125,14 @@ body.menu-open .nav {
 
 .nav-brand { display: flex; align-items: center; }
 .nav-brand img {
-  height: 42px;
+  height: 48px;
   width: auto;
   display: block;
   transition: filter .25s;
 }
 .nav-brand:hover img { filter: brightness(1.25); }
 @media (max-width: 640px) {
-  .nav-brand img { height: 36px; }
+  .nav-brand img { height: 40px; }
 }
 
 /* burger */
@@ -391,9 +391,10 @@ main { position: relative; z-index: 1; }
   flex-wrap: wrap;
   justify-content: center;
 }
-/* both CTAs share one width (sized to the longer label) */
+/* both CTAs share one width (longer label + a little margin) */
 .hero-cta .btn {
-  width: 208px;
+  width: 172px;
+  padding-inline: 12px;
   text-align: center;
 }
 
@@ -1153,8 +1154,12 @@ h2 {
   color: var(--dim);
   font-size: 10.5px;
   line-height: 1.6;
-  opacity: .85;
+  opacity: .45;
+  transition: opacity .3s ease;
 }
+/* fine print sharpens when the press-kit button (or the note) is hovered */
+.booking-actions:hover + .press-note,
+.press-note:hover { opacity: 1; }
 .press-note a { color: var(--chrome); border-bottom: 1px solid var(--line); transition: color .2s, border-color .2s; }
 .press-note a:hover { color: var(--orange); border-color: var(--orange); }
 
