@@ -1,6 +1,6 @@
 # DOCTHOR — allow everything, point crawlers at the sitemap
-# LAUNCH: replace docthormusic-dot.github.io with the real domain
+# LAUNCH: replace docthor.music with the real domain
 User-agent: *
 Allow: /
 
-Sitemap: https://docthormusic-dot.github.io/sitemap.xml
+Sitemap: https://docthor.music/sitemap.xml
