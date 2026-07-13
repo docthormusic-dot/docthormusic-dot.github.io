@@ -450,6 +450,25 @@
       scrollTrigger: { trigger: "#music .player", start: "top 88%", once: true }
     });
 
+    /* mid-page entry (hash link, reload scroll restoration, programmatic
+       jump): once-triggers that are already past their start at refresh
+       can be killed without firing, leaving content invisible — reveal
+       anything already at/above the fold directly */
+    var revealEarly = function () {
+      var limit = window.innerHeight * 0.88;
+      var els = document.querySelectorAll("[data-reveal], #music .platform");
+      Array.prototype.forEach.call(els, function (el) {
+        if (el.getBoundingClientRect().top < limit) {
+          gsap.to(el, { opacity: 1, y: 0, duration: .45, ease: "power2.out", overwrite: true });
+        }
+      });
+    };
+    revealEarly();
+    window.addEventListener("load", function () {
+      revealEarly();
+      setTimeout(revealEarly, 300); /* scroll restoration can land after load */
+    });
+
     /* refresh once media has loaded (embed heights, fonts) */
     window.addEventListener("load", function () { ScrollTrigger.refresh(); });
   }

@@ -609,7 +609,7 @@ h2 {
   margin-bottom: calc(var(--hh) * 0.25); /* extra air before the booking line */
 }
 @media (max-width: 520px) {
-  .sec-head-center .heading-img { margin-top: calc(var(--hh) * 0.55); } /* matches the 2.0 phone scale-up */
+  .sec-head-center .heading-img { margin-top: calc(var(--hh) * 0.62); } /* matches the 2.14 phone scale-up */
 }
 .sec-head-center .heading-img img {
   margin-inline: auto;
@@ -619,9 +619,10 @@ h2 {
   transform-origin: center;
 }
 @media (max-width: 520px) {
-  /* the heading must dominate the section on phones too — 2.0 is the
-     largest scale that clears the container edges at 360px wide */
-  .sec-head-center .heading-img img { transform: scale(2.0); }
+  /* the heading must dominate the section on phones too; 2.14 bleeds
+     ~8px past the container padding on each side (intentional — still
+     12px inside the viewport at 375px) */
+  .sec-head-center .heading-img img { transform: scale(2.14); }
 }
 
 /* ================= ABOUT ================= */
@@ -944,20 +945,20 @@ h2 {
   .player-stage { --coverw: min(100%, 300px); }
   .player-list { max-height: 40svh; }
 }
-/* phones: compact player so cover, transport, list and platform links
-   land close to a single screen */
+/* phones: compact player so cover, transport, list AND the platform
+   links all land within a single screen */
 @media (max-width: 640px) {
-  .player { padding: 16px; gap: 18px; }
-  .player-stage { --coverw: min(100%, 190px); }
-  .player-track { margin-top: 12px; font-size: 15px; }
-  .player-progress { margin-top: 10px; }
-  .player-controls { margin-top: 12px; }
+  #music.section { padding-block: 36px; }
+  .player { padding: 14px; gap: 14px; }
+  .player-stage { --coverw: min(100%, 160px); }
+  .player-track { margin-top: 10px; font-size: 15px; }
+  .player-progress { margin-top: 9px; }
+  .player-controls { margin-top: 10px; }
   .pbtn { width: 42px; height: 42px; }
   .pbtn-play { width: 50px; height: 50px; }
-  .player-list { max-height: 26svh; }
-  .player-row { padding: 10px 8px; font-size: 14px; }
-  .platforms { gap: 8px; }
-  .platform { padding: 9px 14px; font-size: 11px; }
+  .player-list { max-height: 19svh; }
+  .player-row { padding: 9px 8px; font-size: 14px; }
+  .player-attrib { margin-top: 8px; }
 }
 
 .platforms {
@@ -1059,7 +1060,7 @@ h2 {
     min-height: 120px;
     max-height: none;
   }
-  .social-tile img { object-position: 50% 30%; }
+  .social-tile img { object-position: 50% 12%; } /* heads live in the top third of the portraits */
   .tile-name { font-size: 22px; }
   .tile-label { left: 16px; bottom: 14px; }
   .tile-arrow { top: 10px; right: 14px; font-size: 18px; }
@@ -1239,15 +1240,41 @@ body.footer-open .to-top.show {
 
   .about-body { font-size: 15px; }
   .about-body p:first-child { font-size: 16.5px; }
-  .facts { margin-top: 22px; gap: 8px; }
+  .facts { margin-top: 16px; gap: 8px; }
   .facts li { padding: 7px 10px; font-size: 10px; }
+  /* trim the photo window from the bottom so the whole section fits one screen */
+  .about-grid { gap: 18px; }
+  .about-photo { aspect-ratio: auto; height: 22svh; }
+  .about-photo img { object-position: 50% 16%; }
 
-  .booking-line { font-size: 14px; } /* subordinate to the BOOK DOCTHOR heading */
+  /* hero CTAs: equal widths (they share the row evenly); sized against
+     the viewport — the hero core shrink-wraps to the logo, which is
+     narrower than the buttons need */
+  .hero-cta { width: min(88vw, 400px); }
+  .hero-cta .btn {
+    flex: 1 1 0;
+    padding: 13px 14px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  /* booking owns a full screen; subheading clearly narrower than the heading */
+  #booking.section { min-height: 100svh; }
+  .booking-line { font-size: 12px; }
   .booking-mail { font-size: clamp(22px, 6.4vw, 32px); }
   .booking-alt { margin-top: 18px; font-size: 11px; }
 
   .ticker-track span { font-size: 14px; }
   .menu-mail { font-size: 12px; }
+
+  /* equal-width platform links: 2x2 grid (after the base .platforms rule) */
+  .platforms {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .platform { padding: 9px 8px; font-size: 11px; text-align: center; }
 }
 
 /* touch devices: the flashlight reveal follows the finger — dragging on
