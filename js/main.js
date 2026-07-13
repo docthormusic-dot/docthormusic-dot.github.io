@@ -169,8 +169,10 @@
     };
 
     var setPlaying = function (playing) {
-      pPlay.querySelector(".ic-play").hidden = playing;
-      pPlay.querySelector(".ic-pause").hidden = !playing;
+      /* toggleAttribute, not .hidden — SVG elements don't have the
+         HTMLElement hidden property, assignments to it do nothing */
+      pPlay.querySelector(".ic-play").toggleAttribute("hidden", playing);
+      pPlay.querySelector(".ic-pause").toggleAttribute("hidden", !playing);
       pPlay.setAttribute("aria-label", playing ? "Pause" : "Play");
       var active = pList.querySelector(".player-row.is-active");
       if (active) active.classList.toggle("is-paused", !playing);
