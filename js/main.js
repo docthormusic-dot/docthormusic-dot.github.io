@@ -174,6 +174,7 @@
     };
     var pArt = player.querySelector("[data-player-art]");
     var pTitle = player.querySelector("[data-player-title]");
+    var pArtist = player.querySelector("[data-player-artist]");
     var pFill = player.querySelector("[data-player-fill]");
     var pProgress = player.querySelector("[data-player-progress]");
     var pTime = player.querySelector("[data-player-time]");
@@ -223,6 +224,10 @@
     var setNow = function (sound) {
       if (!sound) return;
       pTitle.textContent = sound.title || "Untitled";
+      if (pArtist) {
+        pArtist.textContent = (sound.publisher_metadata && sound.publisher_metadata.artist) ||
+          (sound.user && sound.user.username) || "";
+      }
       durationMs = sound.duration || 0;
       pDur.textContent = fmtTime(durationMs);
       var art = sound.artwork_url || (sound.user && sound.user.avatar_url) || fallbackArt;

@@ -807,6 +807,15 @@ h2 {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.player-artist {
+  width: var(--coverw);
+  margin-top: 6px;
+  color: var(--dim);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .player-progress {
   position: relative;
   width: var(--coverw); /* timeline matches the cover, centered with it */
@@ -1037,9 +1046,10 @@ h2 {
   .player-stage {
     display: grid;
     grid-template-columns: 104px minmax(0, 1fr);
-    grid-template-rows: auto 1fr auto auto;
+    grid-template-rows: auto auto 1fr auto auto;
     grid-template-areas:
       "cover title"
+      "cover artist"
       "cover controls"
       "progress progress"
       "times times";
@@ -1059,10 +1069,16 @@ h2 {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
+  .player-artist {
+    grid-area: artist;
+    width: auto;
+    margin-top: 4px;
+    font-size: 10px;
+  }
   .player-controls {
     grid-area: controls;
     align-self: end;
-    justify-content: flex-start;
+    justify-content: flex-end; /* flush with the timeline's right edge */
     margin-top: 8px;
     gap: 10px;
   }
@@ -1508,8 +1524,13 @@ body.menu-open .to-top {
     text-align: center;
   }
 
-  /* booking owns a full screen; subheading clearly narrower than the heading */
+  /* booking owns a full screen; subheading clearly narrower than the heading.
+     lvh, not svh: sized to the viewport WITH the browser toolbar hidden,
+     so the footer can't peek in at the bottom while the bars are away */
   #booking.section { min-height: 100svh; }
+  @supports (height: 100lvh) {
+    #booking.section { min-height: 100lvh; }
+  }
   .booking-line { font-size: 12px; }
   .booking-mail { font-size: clamp(22px, 6.4vw, 32px); }
   .booking-alt { margin-top: 18px; font-size: 11px; }
