@@ -87,6 +87,7 @@
     .map(function (a) { return document.querySelector(a.getAttribute("href")); })
     .filter(Boolean);
   var dotEls = Array.prototype.slice.call(document.querySelectorAll("[data-dot]"));
+  var navEyebrow = document.querySelector("[data-nav-eyebrow]");
   if ("IntersectionObserver" in window) {
     var activeSection = "";
     var markActive = function (id) {
@@ -99,6 +100,13 @@
         d.classList.toggle("is-active", on);
         d.setAttribute("aria-current", on ? "true" : "false");
       });
+      if (navEyebrow) {
+        /* the bar carries the section eyebrow on phones (the in-section
+           ones are display:none there); text comes from the section's own
+           eyebrow so the wording lives in one place */
+        var src = id && document.querySelector("#" + id + " .eyebrow");
+        navEyebrow.textContent = src ? src.textContent : "";
+      }
     };
     var sectionObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {

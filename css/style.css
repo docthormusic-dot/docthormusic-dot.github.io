@@ -137,6 +137,9 @@ body.menu-open .nav {
 .nav-brand { transition: opacity .3s ease; }
 body.menu-open .nav-brand { opacity: 0; pointer-events: none; }
 
+/* live section label in the bar — phones only (MOBILE POLISH shows it) */
+.nav-eyebrow { display: none; }
+
 .nav-brand { display: flex; align-items: center; }
 .nav-brand img {
   height: 48px;
@@ -1028,7 +1031,7 @@ h2 {
    transport beside it, timeline spanning underneath — so the track list
    gets the vertical space instead */
 @media (max-width: 640px) {
-  #music.section { padding-block: 22px 32px; } /* top: eyebrow rides the nav line (see MOBILE POLISH) */
+  #music.section { padding-block: 80px 48px; } /* top: heading just under the bar line (see MOBILE POLISH) */
   #music .sec-head { margin-bottom: 16px; }
   .player { padding: 14px; gap: 12px; }
   .player-stage {
@@ -1442,10 +1445,10 @@ body.menu-open .to-top {
    vertical rhythm so each section approaches a single screen */
 @media (max-width: 640px) {
   body { font-size: 15.5px; line-height: 1.6; }
-  /* generous top padding clears the floating burger; the bottom half keeps
-     neighboring sections from peeking in while free-scrolling inside a
-     section that's taller than one screen */
-  .section { padding-block: 76px 56px; }
+  /* top padding puts headings just under the bar's hairline; the generous
+     bottom keeps neighboring sections well apart while free-scrolling
+     inside a section that's taller than one screen */
+  .section { padding-block: 80px 88px; }
   .sec-head { margin-bottom: 20px; }
   .eyebrow { margin-bottom: 10px; }
 
@@ -1454,49 +1457,36 @@ body.menu-open .to-top {
      It has nothing to dodge here; keep it parked bottom-right. */
   body.footer-open .to-top.show { transform: translateY(0); }
 
-  /* bare header: the bar disappears, only the burger stays — on the right,
-     matching the back-to-top button below it */
-  .nav, .nav.scrolled {
-    background: transparent;
-    border-bottom-color: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    pointer-events: none;
-    justify-content: flex-end;
-  }
-  .nav .burger {
-    pointer-events: auto;
-    /* solid backdrop: section labels scrolling beneath no longer read as
-       struck-through text */
-    background: rgba(6, 6, 7, .6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-  /* the bar is back: new chrome wordmark dead-center, burger right.
-     Bar stays transparent — the drop shadow lifts the mark off whatever
-     scrolls beneath it */
+  /* the bar behaves like desktop again: transparent over the hero, tinted
+     with a hairline once scrolled (base .nav / .nav.scrolled rules apply).
+     Phone arrangement: live eyebrow left, chrome wordmark dead-center,
+     burger right. */
   .nav-brand {
     display: flex;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    pointer-events: auto;
   }
   .nav-brand img {
     height: 40px;
     filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .85));
   }
+  .nav-eyebrow {
+    display: block;
+    color: var(--orange);
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  body.menu-open .nav-eyebrow { opacity: 0; }
 
-  /* HUD header row: About/Music/Socials ride the nav line — eyebrow
-     vertically centered with the burger, heading top flush with the
-     burger's bottom edge (54px; the chrome images overflow their layout
-     box upward by ~12px, the margins below account for that) */
-  #about.section, #socials.section { padding-top: 22px; }
+  /* the bar carries the eyebrow now — the in-section ones would duplicate
+     it (and used to scroll away with the content) */
+  #about .eyebrow, #music .eyebrow, #socials .eyebrow, #booking .eyebrow { display: none; }
   /* .section centers its content vertically (flex) — these three pin to
-     the top so the header row actually lands on the nav line */
+     the top: heading visual top lands ~4px under the bar's hairline
+     (80px padding − ~12px upward overflow of the chrome images) */
   #about.section, #music.section, #socials.section { align-items: flex-start; }
-  #about .eyebrow, #music .eyebrow, #socials .eyebrow { margin-bottom: 23px; }
 
   .about-body { font-size: 15px; }
   .about-body p:first-child { font-size: 16.5px; }

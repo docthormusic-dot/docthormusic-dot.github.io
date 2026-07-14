@@ -42,7 +42,7 @@
   <link rel="preload" href="assets/fonts/ibm-plex-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=1">
 
-  <link rel="stylesheet" href="css/style.css?v=47">
+  <link rel="stylesheet" href="css/style.css?v=48">
 
   <script defer src="js/vendor/gsap.min.js"></script>
   <script defer src="js/vendor/ScrollTrigger.min.js"></script>
@@ -97,6 +97,9 @@
   <a class="skip-link" href="#about">Skip to content</a>
 
   <header class="nav" data-nav>
+    <!-- phones: live section label — the observer that drives the menu
+         highlight also feeds this (empty over the hero) -->
+    <p class="nav-eyebrow mono" data-nav-eyebrow aria-hidden="true"></p>
     <a class="nav-brand" href="#top"><picture><source media="(max-width: 640px)" srcset="assets/logo-top-left-new.png"><img src="assets/logo-top-left.webp" alt="DOCTHOR" width="378" height="150"></picture></a>
     <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu" data-burger>
       <span></span><span></span>
@@ -365,6 +368,6 @@
     <a href="#booking" aria-label="Booking" data-dot></a>
   </nav>
 
-  <script src="js/main.js?v=23" defer></script>
+  <script src="js/main.js?v=24" defer></script>
 </body>
 </html>
