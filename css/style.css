@@ -63,6 +63,11 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
 }
 
+/* inline SVG arrows (replaced glyphs that rendered as emoji on iOS) */
+.ic-arrow svg { display: inline-block; vertical-align: -0.12em; }
+.tile-arrow svg { display: block; }
+.to-top svg { display: block; }
+
 :focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 3px;
@@ -122,6 +127,9 @@ body.menu-open .nav {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+/* the open menu shows its own emblem — hide the duplicate wordmark */
+.nav-brand { transition: opacity .3s ease; }
+body.menu-open .nav-brand { opacity: 0; pointer-events: none; }
 
 .nav-brand { display: flex; align-items: center; }
 .nav-brand img {
@@ -171,6 +179,7 @@ body.menu-open .burger span:nth-child(2) { top: 21px; transform: rotate(-45deg);
   justify-content: center;
   align-items: center;
   gap: clamp(36px, 7vh, 64px);
+  padding-top: var(--nav-h); /* keep the emblem clear of the close button row */
   background: rgba(4, 4, 5, .96);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -997,17 +1006,26 @@ h2 {
 /* phones: compact player so cover, transport, list AND the platform
    links all land within a single screen */
 @media (max-width: 640px) {
-  #music.section { padding-block: 36px; }
-  .player { padding: 14px; gap: 14px; }
-  .player-stage { --coverw: min(100%, 160px); }
+  #music.section { padding-block: 32px; }
+  #music .sec-head { margin-bottom: 16px; }
+  .player { padding: 14px; gap: 12px; }
+  .player-stage { --coverw: min(100%, 150px); }
   .player-track { margin-top: 10px; font-size: 15px; }
   .player-progress { margin-top: 9px; }
   .player-controls { margin-top: 10px; }
   .pbtn { width: 42px; height: 42px; }
   .pbtn-play { width: 50px; height: 50px; }
-  .player-list { max-height: 19svh; }
+  .player-list { max-height: 15svh; }
   .player-row { padding: 9px 8px; font-size: 14px; }
-  .player-attrib { margin-top: 8px; }
+  /* attribution + consent withdrawal on their own tidy rows */
+  .player-attrib {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    align-items: baseline;
+  }
+  .player-attrib .player-withdraw { margin-left: 0; }
 }
 
 .platforms {
@@ -1336,21 +1354,39 @@ body.footer-open .to-top.show {
 
 /* ================= MOBILE POLISH ================= */
 
+/* mobile/tablet scroll snapping — same section-by-section model as
+   desktop: mandatory (never rests between sections), snap-stop always
+   (one swipe = one section, no skipping). Sections taller than the
+   viewport still scroll freely inside their snap area (spec behavior). */
+@media (max-width: 1023px) {
+  html { scroll-snap-type: y mandatory; }
+  .hero {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .section {
+    min-height: 100svh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    scroll-margin-top: 0;
+  }
+}
+
 /* phones: type as big as necessary, as small as possible — and tighter
    vertical rhythm so each section approaches a single screen */
 @media (max-width: 640px) {
   body { font-size: 15.5px; line-height: 1.6; }
-  .section { padding-block: 44px; }
-  .sec-head { margin-bottom: 26px; }
-  .eyebrow { margin-bottom: 12px; }
+  .section { padding-block: 36px; }
+  .sec-head { margin-bottom: 20px; }
+  .eyebrow { margin-bottom: 10px; }
 
   .about-body { font-size: 15px; }
   .about-body p:first-child { font-size: 16.5px; }
-  .facts { margin-top: 16px; gap: 8px; }
+  .facts { margin-top: 12px; gap: 8px; }
   .facts li { padding: 7px 10px; font-size: 10px; }
   /* trim the photo window from the bottom so the whole section fits one screen */
-  .about-grid { gap: 18px; }
-  .about-photo { aspect-ratio: auto; height: 22svh; }
+  .about-grid { gap: 14px; }
+  .about-photo { aspect-ratio: auto; height: 21svh; }
   .about-photo img { object-position: 50% 16%; }
 
   /* hero CTAs: equal widths (they share the row evenly); sized against
@@ -1373,14 +1409,19 @@ body.footer-open .to-top.show {
   .ticker-track span { font-size: 14px; }
   .menu-mail { font-size: 12px; }
 
-  /* equal-width platform links: 2x2 grid (after the base .platforms rule) */
+  /* equal-width platform links: one compact row of four */
   .platforms {
     margin-top: 12px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
   }
-  .platform { padding: 9px 8px; font-size: 11px; text-align: center; }
+  .platform {
+    padding: 9px 2px;
+    font-size: 9.5px;
+    letter-spacing: .06em;
+    text-align: center;
+  }
 }
 
 /* touch devices: the flashlight reveal follows the finger — dragging on
