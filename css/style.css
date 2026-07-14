@@ -29,7 +29,13 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* base canvas: what iOS paints behind the expanded browser toolbar and
+     in overscroll — warm near-black so it blends with the swirl instead
+     of reading as a black bar (pure #060607 did) */
+  background: #0e0809;
+}
 
 body {
   background: var(--black);
@@ -1022,7 +1028,7 @@ h2 {
    transport beside it, timeline spanning underneath — so the track list
    gets the vertical space instead */
 @media (max-width: 640px) {
-  #music.section { padding-block: 76px 32px; }
+  #music.section { padding-block: 22px 32px; } /* top: eyebrow rides the nav line (see MOBILE POLISH) */
   #music .sec-head { margin-bottom: 16px; }
   .player { padding: 14px; gap: 12px; }
   .player-stage {
@@ -1285,7 +1291,8 @@ h2 {
 .to-top {
   position: fixed;
   right: clamp(16px, 2.5vw, 28px);
-  bottom: clamp(16px, 3vh, 26px);
+  /* viewport-fit=cover: stay clear of the home indicator */
+  bottom: max(clamp(16px, 3vh, 26px), env(safe-area-inset-bottom, 16px));
   z-index: 46;
   width: 48px;
   height: 48px;
@@ -1465,7 +1472,31 @@ body.menu-open .to-top {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-  .nav-brand { display: none; }
+  /* the bar is back: new chrome wordmark dead-center, burger right.
+     Bar stays transparent — the drop shadow lifts the mark off whatever
+     scrolls beneath it */
+  .nav-brand {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+  }
+  .nav-brand img {
+    height: 40px;
+    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .85));
+  }
+
+  /* HUD header row: About/Music/Socials ride the nav line — eyebrow
+     vertically centered with the burger, heading top flush with the
+     burger's bottom edge (54px; the chrome images overflow their layout
+     box upward by ~12px, the margins below account for that) */
+  #about.section, #socials.section { padding-top: 22px; }
+  /* .section centers its content vertically (flex) — these three pin to
+     the top so the header row actually lands on the nav line */
+  #about.section, #music.section, #socials.section { align-items: flex-start; }
+  #about .eyebrow, #music .eyebrow, #socials .eyebrow { margin-bottom: 23px; }
 
   .about-body { font-size: 15px; }
   .about-body p:first-child { font-size: 16.5px; }
