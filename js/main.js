@@ -232,6 +232,7 @@
       pDur.textContent = fmtTime(durationMs);
       var art = sound.artwork_url || (sound.user && sound.user.avatar_url) || fallbackArt;
       pArt.src = art ? art.replace("-large", "-t500x500") : fallbackArt;
+      pArt.alt = sound.title ? "Cover art — " + sound.title : "Cover art of the current track";
     };
 
     var setPlaying = function (playing) {
