@@ -1431,8 +1431,17 @@ body.menu-open .to-top {
 .legal-wrap a:hover { color: var(--orange); border-color: var(--orange); }
 .legal-wrap address { font-style: normal; color: var(--chrome); line-height: 1.8; margin-bottom: 14px; }
 .legal-updated { font-size: 12px !important; margin-top: 40px; }
-/* footer behaves statically on sub-pages (no JS there) */
-.legal-body .footer { position: static !important; transform: none !important; }
+/* footer behaves statically on sub-pages (no JS there). It must also never
+   be a snap point or a full screen here: legal pages have no other snap
+   areas, so under the root's mandatory snapping a snapped footer becomes
+   the page's ONLY rest position — the whole page gets pulled down to it
+   and the text above is unreachable. */
+.legal-body .footer {
+  position: static !important;
+  transform: none !important;
+  min-height: 0 !important;
+  scroll-snap-align: none !important;
+}
 .footer-legal a { color: var(--dim); }
 
 /* ================= MOBILE POLISH ================= */
@@ -1562,13 +1571,25 @@ body.menu-open .to-top {
   /* press-kit fine print: smaller and quieter on phones */
   .press-note { font-size: 9.5px; opacity: .22; }
 
-  /* the footer is its own snapped end screen — it never peeks into Booking */
+  /* the footer is its own snapped end screen — it never peeks into Booking.
+     NO scroll-snap-stop here: on iOS Safari, snap-stop:always on a snap
+     child eats the first tap on links inside it (taps read as snap
+     settles) — the footer links felt dead. snap-align alone keeps the
+     footer reachable/rest-able under the mandatory snap without the bug. */
   .footer {
     min-height: 100svh;
     display: flex;
     align-items: center;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
+  }
+  /* reliable tap targets: manipulation kills the tap-delay + double-tap
+     zoom that made these links unresponsive; padding widens the 12px hit
+     area; relative+z-index keeps them above the snap paint layer */
+  .footer-links a {
+    position: relative;
+    z-index: 1;
+    padding: 8px 6px;
+    touch-action: manipulation;
   }
   .footer-inner {
     flex-direction: column;
@@ -1592,7 +1613,7 @@ body.menu-open .to-top {
     gap: 12px 22px;
   }
   .footer-legal {
-    max-width: 260px; /* breaks 3 + 2 instead of 4 + orphan */
+    max-width: 320px; /* widened for the link padding — still breaks 3 + 2 */
     margin-inline: auto;
   }
 }
