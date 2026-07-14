@@ -24,7 +24,21 @@
     setMenu(!document.body.classList.contains("menu-open"));
   });
   menuLinks.forEach(function (a) {
-    a.addEventListener("click", function () { setMenu(false); });
+    /* close first, jump on the next frame: navigating while the menu's
+       overflow:hidden is being torn down makes iOS land on the hero
+       instead of the target section (snap re-evaluates mid-toggle) */
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      setMenu(false);
+      var href = a.getAttribute("href");
+      var target = document.querySelector(href);
+      var jump = function () {
+        if (target) target.scrollIntoView({ behavior: "auto", block: "start" });
+      };
+      jump();               /* immediately… */
+      setTimeout(jump, 60); /* …and again after iOS finishes the overflow/style recalc */
+      history.replaceState(null, "", href);
+    });
   });
   /* logo → hero: closes the menu like a link, but stays out of the
      active-section observer (its #top target is the whole body) */
