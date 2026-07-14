@@ -53,6 +53,23 @@
       history.replaceState(null, "", href);
     });
   });
+  /* every other in-page anchor (hero CTAs, scroll cue, #top links, dots)
+     takes the same snap-lifted path — native fragment jumps are just as
+     vulnerable to iOS eating the scroll under mandatory snapping.
+     Excluded: menu links (own handler above) and the skip link (must move
+     focus natively for keyboard/screen-reader users). */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || a.hasAttribute("data-menu-link") || a.classList.contains("skip-link")) return;
+    var href = a.getAttribute("href");
+    var target = document.querySelector(href);
+    if (!target) return;
+    e.preventDefault();
+    jumpWithoutSnap(function () {
+      target.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+    history.replaceState(null, "", href === "#top" ? window.location.pathname : href);
+  });
   /* logo → hero: closes the menu like a link, but stays out of the
      active-section observer (its #top target is the whole body) */
   Array.prototype.forEach.call(document.querySelectorAll("[data-menu-close]"), function (el) {
@@ -181,8 +198,17 @@
         r.classList.toggle("is-active", i === index);
       });
       var active = rows[index];
-      if (active && active.scrollIntoView) {
-        active.scrollIntoView({ block: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+      if (!active) return;
+      /* scroll the LIST only — scrollIntoView also scrolls ancestors, which
+         dragged the whole page back to the player whenever a track changed
+         while the visitor was in another section */
+      var rowTop = active.offsetTop - pList.offsetTop; /* both offset against .player */
+      var viewTop = pList.scrollTop;
+      var viewBottom = viewTop + pList.clientHeight;
+      if (rowTop < viewTop || rowTop + active.offsetHeight > viewBottom) {
+        /* instant, not smooth: smooth container scrolls are rAF-driven and
+           get silently dropped in hidden tabs / off-screen containers */
+        pList.scrollTop = rowTop - (pList.clientHeight - active.offsetHeight) / 2;
       }
     };
 
@@ -274,10 +300,26 @@
       var seekTo = function (frac) {
         if (durationMs) widget.seekTo(Math.max(0, Math.min(1, frac)) * durationMs);
       };
-      pProgress.addEventListener("click", function (e) {
+      /* tap OR drag to seek (pointer capture keeps the drag alive when the
+         finger strays off the slim bar; touch-action: none in CSS stops
+         the page from scrolling instead) */
+      var seeking = false;
+      var seekFromEvent = function (e) {
         var r = pProgress.getBoundingClientRect();
-        seekTo((e.clientX - r.left) / r.width);
+        var frac = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+        pFill.style.width = (frac * 100) + "%"; /* live feedback before the widget echoes back */
+        seekTo(frac);
+      };
+      pProgress.addEventListener("pointerdown", function (e) {
+        seeking = true;
+        if (pProgress.setPointerCapture) pProgress.setPointerCapture(e.pointerId);
+        seekFromEvent(e);
       });
+      pProgress.addEventListener("pointermove", function (e) {
+        if (seeking) seekFromEvent(e);
+      });
+      pProgress.addEventListener("pointerup", function () { seeking = false; });
+      pProgress.addEventListener("pointercancel", function () { seeking = false; });
       pProgress.addEventListener("keydown", function (e) {
         if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
         e.preventDefault();

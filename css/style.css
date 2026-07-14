@@ -264,6 +264,12 @@ body.menu-open .menu-meta { opacity: 1; transform: none; }
   z-index: 0;
   background: url("../assets/swirl-static.jpg") center / cover no-repeat var(--black);
 }
+/* size to the LARGE viewport: iOS resizes fixed elements only after the
+   toolbar show/hide animation, which exposed a black bar behind the
+   browser buttons — at 100lvh the background always covers that zone */
+@supports (height: 100lvh) {
+  .flow-bg { bottom: auto; height: 100lvh; }
+}
 .flow-video {
   position: absolute;
   inset: 0;
@@ -793,12 +799,20 @@ h2 {
   white-space: nowrap;
 }
 .player-progress {
+  position: relative;
   width: var(--coverw); /* timeline matches the cover, centered with it */
   margin-top: 14px;
   height: 5px;
   background: var(--line);
   cursor: pointer;
   transition: transform .2s;
+  touch-action: none; /* dragging the bar seeks — it must not scroll the page */
+}
+/* invisible padded hit zone: the 5px bar is a ~29px touch target */
+.player-progress::before {
+  content: "";
+  position: absolute;
+  inset: -12px 0;
 }
 .player-progress:hover,
 .player-progress:focus-visible { transform: scaleY(1.5); }
@@ -1231,6 +1245,8 @@ h2 {
   padding-block: 34px;
   background: rgba(6, 6, 7, .8);
 }
+/* emblem only exists on the phone end screen (MOBILE POLISH shows it) */
+.footer-logo { display: none; }
 
 /* desktop with a mouse: footer hides below the viewport and slides up
    when the cursor approaches the bottom edge (or a footer link is focused) */
@@ -1441,7 +1457,14 @@ body.menu-open .to-top {
     pointer-events: none;
     justify-content: flex-end;
   }
-  .nav .burger { pointer-events: auto; }
+  .nav .burger {
+    pointer-events: auto;
+    /* solid backdrop: section labels scrolling beneath no longer read as
+       struck-through text */
+    background: rgba(6, 6, 7, .6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
   .nav-brand { display: none; }
 
   .about-body { font-size: 15px; }
@@ -1510,6 +1533,14 @@ body.menu-open .to-top {
     justify-content: center;
     text-align: center;
     gap: 24px;
+  }
+  /* the end screen gets the chrome emblem so it doesn't feel empty */
+  .footer-logo {
+    display: block;
+    width: min(52vw, 220px);
+    height: auto;
+    margin-inline: auto;
+    margin-bottom: 10px;
   }
   /* ordered, centered link rows: wrapped lines center instead of ragging
      left; the legal row is width-capped so it breaks into two balanced
