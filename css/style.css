@@ -1454,7 +1454,7 @@ body.menu-open .to-top {
   .platform .ic-arrow svg { width: 12px; height: 12px; display: block; }
 
   /* press-kit fine print: smaller and quieter on phones */
-  .press-note { font-size: 9.5px; opacity: .35; }
+  .press-note { font-size: 9.5px; opacity: .22; }
 
   /* the footer is its own snapped end screen — it never peeks into Booking */
   .footer {
