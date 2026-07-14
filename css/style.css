@@ -1518,6 +1518,9 @@ body.menu-open .to-top {
   /* tags keep the natural flex wrap (varied widths, like desktop) —
      nowrap just guards each tag to a single line */
   .facts { margin-top: 12px; gap: 8px; }
+  /* row shapes: CLUB & FESTIVAL pairs with the cities on row two,
+     INTERNATIONAL BOOKINGS closes alone (visual order only) */
+  .facts li:nth-child(5) { order: 1; }
   .facts li {
     padding: 7px 10px;
     font-size: 10px;
