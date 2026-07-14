@@ -31,6 +31,23 @@ strips ALL metadata from every JPEG under `assets/`, embeds ownership EXIF
 (Copyright, Artist, contact), re-encodes at quality 85, and bakes in watermarks
 for files opted in via `tools/watermark.conf`.
 
+### Known gap: the script only handles JPEGs (verified 2026-07-14)
+PNGs and WebPs under `assets/` **bypass the pipeline entirely** — they are
+neither stripped nor given ownership EXIF. Affects `logo.png`,
+`logo-top-left-new.png`, `logo-top-left.webp`, `reveal-portrait.png`, the
+heading WebPs and the favicons.
+
+Audited: the only metadata these actually carry is benign (`icc_profile`,
+`dpi`, and — on `logo-top-left-new.png`, courtesy of `sips` — a 126-byte EXIF
+block holding nothing but 72dpi resolution). **No camera, GPS, or editing
+history is exposed**, so there is no privacy issue today. The real cost is that
+these files carry *no ownership fields either*, so the provenance-evidence story
+only covers the photos.
+
+If a PNG/WebP ever comes from a camera, a phone, or a Photoshop export with
+history, it must be stripped by hand before it ships (or the script extended to
+those formats). Check any new one with the metadata test below.
+
 ## How to add a new image safely
 1. Keep the master outside the repo (in `02_Working/`).
 2. Export a web-sized JPEG/WebP into `assets/…` (photos in `assets/photos/`).
@@ -56,8 +73,13 @@ Runs automatically on every push via `.github/workflows/asset-audit.yml`;
 python3 -c "from PIL import Image; im=Image.open('assets/photos/about.jpg'); \
 print(dict(im.getexif())); print([k for k in im.info if k!='jfif'])"
 ```
-Expected: only tags 0x013B/0x8298/0x010E (Artist/Copyright/Description), no
-photoshop/xmp blocks.
+Expected for JPEGs: only tags 0x013B/0x8298/0x010E (Artist/Copyright/
+Description), no photoshop/xmp blocks.
+
+For a PNG/WebP (which the script does *not* process — see the gap above), the
+same command should show nothing beyond `icc_profile` / `dpi` / a
+resolution-only `exif`. Anything else (camera model, GPS, `photoshop`, `xmp`)
+means the file must not ship as-is.
 
 ## Cloudflare (optional, not active)
 See `docs/CLOUDFLARE_SECURITY.md`. Requires moving DNS from Namecheap's
