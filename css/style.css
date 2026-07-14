@@ -1515,18 +1515,13 @@ body.menu-open .to-top {
 
   .about-body { font-size: 15px; }
   .about-body p:first-child { font-size: 16.5px; }
-  /* six tags: two tidy columns instead of a ragged flex wrap */
-  .facts {
-    margin-top: 12px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
+  /* tags keep the natural flex wrap (varied widths, like desktop) —
+     nowrap just guards each tag to a single line */
+  .facts { margin-top: 12px; gap: 8px; }
   .facts li {
-    padding: 8px 4px;
-    font-size: 9px;
-    letter-spacing: .06em; /* tighter than .mono's .12em so the longest tags stay on one line */
-    text-align: center;
+    padding: 7px 10px;
+    font-size: 10px;
+    white-space: nowrap;
   }
   /* trim the photo window from the bottom so the whole section fits one screen */
   .about-grid { gap: 14px; }
