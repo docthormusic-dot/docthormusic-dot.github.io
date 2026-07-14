@@ -23,20 +23,33 @@
   burger.addEventListener("click", function () {
     setMenu(!document.body.classList.contains("menu-open"));
   });
+  /* iOS swallows programmatic scrolls while mandatory scroll snapping is
+     active on the root (the snap engine reverts the jump, so taps appear
+     to do nothing): lift snapping, jump, jump again once the style recalc
+     has settled, then restore. Every target is itself a snap point, so
+     restoring snap doesn't move the page. */
+  var jumpWithoutSnap = function (jump) {
+    var root = document.documentElement;
+    root.style.scrollSnapType = "none";
+    jump();               /* immediately… */
+    setTimeout(function () {
+      jump();             /* …and again after iOS finishes the overflow/style recalc */
+      root.style.scrollSnapType = "";
+    }, 90);
+  };
   menuLinks.forEach(function (a) {
-    /* close first, jump on the next frame: navigating while the menu's
-       overflow:hidden is being torn down makes iOS land on the hero
-       instead of the target section (snap re-evaluates mid-toggle) */
+    /* close first, then jump: navigating while the menu's overflow:hidden
+       is being torn down makes iOS land on the hero instead of the target */
     a.addEventListener("click", function (e) {
       e.preventDefault();
       setMenu(false);
       var href = a.getAttribute("href");
       var target = document.querySelector(href);
-      var jump = function () {
-        if (target) target.scrollIntoView({ behavior: "auto", block: "start" });
-      };
-      jump();               /* immediately… */
-      setTimeout(jump, 60); /* …and again after iOS finishes the overflow/style recalc */
+      if (target) {
+        jumpWithoutSnap(function () {
+          target.scrollIntoView({ behavior: "auto", block: "start" });
+        });
+      }
       history.replaceState(null, "", href);
     });
   });
@@ -451,7 +464,13 @@
     window.addEventListener("scroll", updateToTop, { passive: true });
     updateToTop();
     toTop.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+      /* phones/tablets: smooth scrolling fights snap-stop:always on iOS
+         (stalls at the next section) — instant jump with snapping lifted */
+      if (reducedMotion || window.matchMedia("(max-width: 1023px)").matches) {
+        jumpWithoutSnap(function () { window.scrollTo(0, 0); });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     });
   }
 

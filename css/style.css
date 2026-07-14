@@ -1004,19 +1004,50 @@ h2 {
   .player-stage { --coverw: min(100%, 300px); }
   .player-list { max-height: 40svh; }
 }
-/* phones: compact player so cover, transport, list AND the platform
-   links all land within a single screen */
+/* phones: compact header-row player — small cover on the left, title and
+   transport beside it, timeline spanning underneath — so the track list
+   gets the vertical space instead */
 @media (max-width: 640px) {
-  #music.section { padding-block: 32px; }
+  #music.section { padding-block: 76px 32px; }
   #music .sec-head { margin-bottom: 16px; }
   .player { padding: 14px; gap: 12px; }
-  .player-stage { --coverw: min(100%, 150px); }
-  .player-track { margin-top: 10px; font-size: 15px; }
-  .player-progress { margin-top: 9px; }
-  .player-controls { margin-top: 10px; }
-  .pbtn { width: 42px; height: 42px; }
-  .pbtn-play { width: 50px; height: 50px; }
-  .player-list { max-height: 13svh; }
+  .player-stage {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "cover title"
+      "cover controls"
+      "progress progress"
+      "times times";
+    column-gap: 14px;
+    align-items: start;
+  }
+  .player-cover { grid-area: cover; width: 100%; }
+  .player-track {
+    grid-area: title;
+    width: auto;
+    margin-top: 2px;
+    font-size: 15px;
+    line-height: 1.25;
+    /* two lines instead of one truncated line */
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .player-controls {
+    grid-area: controls;
+    align-self: end;
+    justify-content: flex-start;
+    margin-top: 8px;
+    gap: 10px;
+  }
+  .pbtn { width: 40px; height: 40px; }
+  .pbtn-play { width: 46px; height: 46px; }
+  .player-progress { grid-area: progress; width: auto; margin-top: 12px; }
+  .player-times { grid-area: times; width: auto; margin-top: 6px; }
+  .player-list { max-height: 30svh; }
   .player-row { padding: 9px 8px; font-size: 14px; }
   /* attribution + consent withdrawal: small print, tidy rows */
   .player-attrib {
@@ -1388,17 +1419,27 @@ body.menu-open .to-top {
    vertical rhythm so each section approaches a single screen */
 @media (max-width: 640px) {
   body { font-size: 15.5px; line-height: 1.6; }
-  .section { padding-block: 36px; }
+  /* generous top padding clears the floating burger; the bottom half keeps
+     neighboring sections from peeking in while free-scrolling inside a
+     section that's taller than one screen */
+  .section { padding-block: 76px 56px; }
   .sec-head { margin-bottom: 20px; }
   .eyebrow { margin-bottom: 10px; }
 
-  /* bare header: the bar disappears, only the burger stays */
+  /* Booking: the footer below is its own full snap screen — the "step
+     aside" shift (--footer-h) would launch the button a whole viewport up.
+     It has nothing to dodge here; keep it parked bottom-right. */
+  body.footer-open .to-top.show { transform: translateY(0); }
+
+  /* bare header: the bar disappears, only the burger stays — on the right,
+     matching the back-to-top button below it */
   .nav, .nav.scrolled {
     background: transparent;
     border-bottom-color: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     pointer-events: none;
+    justify-content: flex-end;
   }
   .nav .burger { pointer-events: auto; }
   .nav-brand { display: none; }
@@ -1468,7 +1509,18 @@ body.menu-open .to-top {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    gap: 22px;
+    gap: 24px;
+  }
+  /* ordered, centered link rows: wrapped lines center instead of ragging
+     left; the legal row is width-capped so it breaks into two balanced
+     lines rather than four-plus-orphan */
+  .footer-links {
+    justify-content: center;
+    gap: 12px 22px;
+  }
+  .footer-legal {
+    max-width: 260px; /* breaks 3 + 2 instead of 4 + orphan */
+    margin-inline: auto;
   }
 }
 
